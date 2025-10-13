@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: spring-petclinic
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: spring-petclinic
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: spring-petclinic
+    scaleDown: progressively
+  strategy:
+    blueGreen:
+      activeService: spring-petclinic
+      previewService: spring-petclinic-preview
+      autoPromotionEnabled: false
+      # prePromotionAnalysis:
+      #   templates:
+      #   - templateName: smoke-tests
+      #   args:
+      #   - name: namespace
+      #     value: spring-petclinic-rollout
+      #   - name: route-name
+      #     value: spring-petclinic-preview
+      #   - name: route-url
+      #     value: bluegreen-preview-rollouts-demo-prod.${SUB_DOMAIN}

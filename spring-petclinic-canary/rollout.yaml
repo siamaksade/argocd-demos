@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/part-of: spring-petclinic
     app.openshift.io/runtime: java
   annotations:
-    app.openshift.io/vcs-uri: 'https://github.com/siamaksade/spring-petclinic'
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   replicas: 5
@@ -18,23 +17,46 @@ spec:
   selector:
     matchLabels:
       app: spring-petclinic
-  workloadRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: spring-petclinic
-    scaleDown: progressively
+  template:
+    metadata:
+      labels:
+        app: spring-petclinic
+    spec:
+      containers:
+      - name: spring-petclinic
+        imagePullPolicy: Always
+        image: quay.io/siamaksade/spring-petclinic:latest
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        - containerPort: 8778
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+  rollbackWindow:
+    revisions: 3
   strategy:
     canary:
-      # analysis:
-      #   templates:
-      #   - templateName: canary
-      #   args:
-      #   - name: namespace
-      #     value: rollouts-demo-prod
-      #   - name: route-name
-      #     value: canary-canary
-      #   - name: route-url
-      #     value: canary-canary-rollouts-demo-prod.${SUB_DOMAIN}
       canaryService: spring-petclinic-canary
       stableService: spring-petclinic
       trafficRouting:
@@ -42,7 +64,11 @@ spec:
           argoproj-labs/openshift:
             routes:
               - spring-petclinic
+
       steps:
       - setWeight: 20
       - pause: {}
-      - setWeight: 60
+      - setWeight: 40
+      - pause: {duration: 30}
+      - setWeight: 80
+      - pause: {duration: 60}

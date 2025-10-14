@@ -1,5 +1,5 @@
 resources:
-- ../spring-petclinic-basic
 - service.yaml
+- service-canary.yaml
 - route.yaml
 - rollout.yaml

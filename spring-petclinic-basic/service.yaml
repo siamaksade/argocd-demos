@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/part-of: spring-petclinic
     app.openshift.io/runtime: java
   annotations:
-    app.openshift.io/vcs-uri: 'https://github.com/siamaksade/argocd-demos'
+    app.openshift.io/vcs-uri: 'https://github.com/siamaksade/spring-petclinic'
   name: spring-petclinic
 spec:
   ports:

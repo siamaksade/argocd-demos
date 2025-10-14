@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: spring-petclinic
+  name: spring-petclinic-canary
   labels:
     app: spring-petclinic
     app.kubernetes.io/component: web

@@ -3,7 +3,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: spring-petclinic-canary
+    app: spring-petclinic
     app.kubernetes.io/component: web
     app.kubernetes.io/instance: spring-petclinic
     app.kubernetes.io/name: spring-petclinic
@@ -13,7 +13,7 @@ metadata:
     app.openshift.io/vcs-uri: 'https://github.com/siamaksade/spring-petclinic'
     haproxy.router.openshift.io/disable_cookies: 'true'
     haproxy.router.openshift.io/balance: roundrobin
-  name: spring-petclinic
+  name: spring-petclinic-canary
 spec:
   port:
     targetPort: 8080-tcp

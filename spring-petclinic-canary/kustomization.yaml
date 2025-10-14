@@ -1,4 +1,5 @@
 resources:
-- deployment.yaml
+- ../spring-petclinic-basic
 - service.yaml
 - route.yaml
+- rollout.yaml

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spring-petclinic-canary
+spec:
+  destination:
+    namespace: spring-petclinic-canary
+    server: https://kubernetes.default.svc
+  source:
+    path: spring-petclinic-canary
+    repoURL: https://github.com/siamaksade/argocd-demos
+    targetRevision: HEAD
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
